@@ -1,0 +1,13 @@
+CREATE TABLE customer (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    uuid VARCHAR(36) NOT NULL UNIQUE,
+    full_name VARCHAR(150) NOT NULL,
+    document_number VARCHAR(14) NOT NULL UNIQUE, -- CPF ou CNPJ
+    email VARCHAR(100) NOT NULL UNIQUE,
+    status VARCHAR(20) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    INDEX idx_customer_uuid (uuid),
+    INDEX idx_customer_document (document_number)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
