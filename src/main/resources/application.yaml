@@ -2,10 +2,11 @@ spring:
   application:
     name: fincore-api
 
+  # Usamos : como separador para definir o valor padrão caso a variável não exista
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/fincore_db?createDatabaseIfNotExist=true&serverTimezone=UTC}
+    username: ${SPRING_DATASOURCE_USERNAME:api_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:api_password}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -14,14 +15,24 @@ spring:
     show-sql: false
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
-        dialect: org.hibernate.dialect.MySQL8Dialect
 
   flyway:
     enabled: true
     baseline-on-migrate: true
 
+  # Correção da indentação do Docker Compose (deve estar dentro de 'spring')
+  docker:
+    compose:
+      enabled: false
+
 server:
-  port: ${SERVER_PORT}
+  port: ${SERVER_PORT:8080}
   error:
     include-message: always
+
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:fincore-secret-key-development-123}
