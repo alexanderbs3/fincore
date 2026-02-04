@@ -3,6 +3,7 @@ package br.leetjourney.fincore.core.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "customer")
@@ -10,7 +11,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class Customer extends BaseEntity {
 
     @Column(name = "fullName", nullable = false, length = 150)

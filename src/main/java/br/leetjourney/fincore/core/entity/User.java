@@ -30,7 +30,8 @@ public class User extends BaseEntity implements UserDetails {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private UserRole role; // ADMIN, USER, etc.
+    @Column(nullable = false, length = 20)
+    private UserRole role;
 
     // Métodos da interface UserDetails
     @Override
