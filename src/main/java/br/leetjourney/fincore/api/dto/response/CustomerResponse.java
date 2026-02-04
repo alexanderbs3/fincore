@@ -1,4 +1,4 @@
-package br.leetjourney.fincore.api.dto;
+package br.leetjourney.fincore.api.dto.response;
 
 import br.leetjourney.fincore.core.entity.CustomerStatus;
 

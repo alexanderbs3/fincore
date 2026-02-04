@@ -1,4 +1,4 @@
-package br.leetjourney.fincore.api.dto;
+package br.leetjourney.fincore.api.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

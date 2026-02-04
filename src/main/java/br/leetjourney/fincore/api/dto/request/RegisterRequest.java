@@ -1,4 +1,4 @@
-package br.leetjourney.fincore.api.dto;
+package br.leetjourney.fincore.api.dto.request;
 
 import br.leetjourney.fincore.core.entity.UserRole;
 
