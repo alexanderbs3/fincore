@@ -1,7 +1,7 @@
 package br.leetjourney.fincore.core.service;
 
-import br.leetjourney.fincore.api.dto.CustomerRequest;
-import br.leetjourney.fincore.api.dto.CustomerResponse;
+import br.leetjourney.fincore.api.dto.request.CustomerRequest;
+import br.leetjourney.fincore.api.dto.response.CustomerResponse;
 import br.leetjourney.fincore.api.exception.BusinessException;
 import br.leetjourney.fincore.api.mapper.CustomerMapper;
 import br.leetjourney.fincore.core.entity.CustomerStatus;
