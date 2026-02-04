@@ -1,6 +1,5 @@
 package br.leetjourney.fincore.core.repository;
 
-import br.leetjourney.fincore.api.dto.RegisterRequest;
 import br.leetjourney.fincore.core.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
