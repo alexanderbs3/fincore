@@ -1,5 +1,8 @@
 package br.leetjourney.fincore.core.security;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfigurations {
-
     private final SecurityFilter securityFilter;
 
     @Bean
@@ -27,27 +29,24 @@ public class SecurityConfigurations {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        // Permite POST para registro e login sem estar logado
-                        .requestMatchers(HttpMethod.POST, "/v1/auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/v1/auth/login").permitAll()
-
-                        // Permite acesso ao Swagger (importante para portfólio)
+                        .requestMatchers(HttpMethod.POST, "/v1/auth/register").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-
-                        // Todo o resto exige token
                         .anyRequest().authenticated()
                 )
+                // O segredo está aqui: o filtro deve vir ANTES da autenticação padrão
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
