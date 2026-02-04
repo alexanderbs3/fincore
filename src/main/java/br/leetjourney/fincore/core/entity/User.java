@@ -30,43 +30,32 @@ public class User extends BaseEntity implements UserDetails {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private UserRole role; // ADMIN, USER, etc.
 
-
-
+    // Métodos da interface UserDetails
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.role == UserRole.ADMIN){
+        if (this.role == UserRole.ADMIN) {
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         }
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
-    @Override
-    public @Nullable String getPassword() {
-        return "email";
-    }
 
     @Override
-    public String getUsername() {
-        return "password";
-    }
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+    public String getUsername() { return email; }
 
     @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+    public String getPassword() { return password; }
 
     @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+    public boolean isAccountNonExpired() { return true; }
 
     @Override
-    public boolean isEnabled() {
-        return true;
-    }
+    public boolean isAccountNonLocked() { return true; }
+
+    @Override
+    public boolean isCredentialsNonExpired() { return true; }
+
+    @Override
+    public boolean isEnabled() { return true; }
 }
