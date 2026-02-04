@@ -1,7 +1,7 @@
 package br.leetjourney.fincore.api.controller;
 
-import br.leetjourney.fincore.api.dto.CustomerRequest;
-import br.leetjourney.fincore.api.dto.CustomerResponse;
+import br.leetjourney.fincore.api.dto.request.CustomerRequest;
+import br.leetjourney.fincore.api.dto.response.CustomerResponse;
 import br.leetjourney.fincore.core.service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

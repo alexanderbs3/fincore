@@ -1,8 +1,8 @@
 package br.leetjourney.fincore.api.controller;
 
-import br.leetjourney.fincore.api.dto.AuthenticationRequest;
-import br.leetjourney.fincore.api.dto.LoginResponseRequest;
-import br.leetjourney.fincore.api.dto.RegisterRequest;
+import br.leetjourney.fincore.api.dto.request.AuthenticationRequest;
+import br.leetjourney.fincore.api.dto.request.LoginResponseRequest;
+import br.leetjourney.fincore.api.dto.request.RegisterRequest;
 import br.leetjourney.fincore.core.entity.User;
 import br.leetjourney.fincore.core.repository.UserRepository;
 import br.leetjourney.fincore.core.security.TokenService;
