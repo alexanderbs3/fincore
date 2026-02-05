@@ -1,17 +1,15 @@
 package br.leetjourney.fincore.api.controller;
 
 import br.leetjourney.fincore.api.dto.request.DepositRequest;
-import br.leetjourney.fincore.api.dto.request.TransactionResponse;
+import br.leetjourney.fincore.api.dto.response.TransactionResponse;
 import br.leetjourney.fincore.api.dto.request.TransferRequest;
 import br.leetjourney.fincore.core.service.TransactionService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package br.leetjourney.fincore.api.dto.request;
+package br.leetjourney.fincore.api.dto.response;
 
 import br.leetjourney.fincore.core.entity.TransactionType;
 import lombok.Builder;

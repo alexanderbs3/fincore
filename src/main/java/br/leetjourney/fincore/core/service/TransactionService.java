@@ -1,7 +1,7 @@
 package br.leetjourney.fincore.core.service;
 
 import br.leetjourney.fincore.api.dto.request.DepositRequest;
-import br.leetjourney.fincore.api.dto.request.TransactionResponse;
+import br.leetjourney.fincore.api.dto.response.TransactionResponse;
 import br.leetjourney.fincore.api.dto.request.TransferRequest;
 import br.leetjourney.fincore.api.exception.BusinessException;
 import br.leetjourney.fincore.core.entity.Account;
