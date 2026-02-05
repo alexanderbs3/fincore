@@ -10,6 +10,8 @@ import br.leetjourney.fincore.core.entity.TransactionType;
 import br.leetjourney.fincore.core.repository.AccountRepository;
 import br.leetjourney.fincore.core.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,8 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class TransactionService {
 
     private final AccountRepository accountRepository;
@@ -26,10 +30,12 @@ public class TransactionService {
 
     @Transactional
     public TransactionResponse deposit(DepositRequest request) {
-        Account account = accountRepository.findByUuid(request.accountUuid())
-                .orElseThrow(() -> new BusinessException("Conta não encontrada."));
+        log.info("Iniciando deposito {}", request.accountUuid());
 
-        // Atualiza saldo - BigDecimal é imutável, por isso o set com o resultado do add
+        Account account = accountRepository.findByUuidWithLock(request.accountUuid())
+                .orElseThrow(() -> new BusinessException("Conta não encontrada para deposito "));
+
+
         account.setBalance(account.getBalance().add(request.amount()));
         accountRepository.save(account);
 
@@ -37,26 +43,28 @@ public class TransactionService {
                 .destinationAccount(account)
                 .amount(request.amount())
                 .type(TransactionType.DEPOSIT)
-                .description("Depósito via API")
+                .description("Deposito via API")
                 .build();
 
-        var savedTransaction = transactionRepository.save(transaction);
-        return toResponse(savedTransaction);
+        log.info("Depósito de {} realizado com sucesso na conta {}", request.amount(), account.getAccountNumber());
+        return toResponse(transactionRepository.save(transaction));
     }
 
     @Transactional
     public TransactionResponse transfer(TransferRequest request) {
-        var source = accountRepository.findByUuid(request.sourceAccountUuid())
-                .orElseThrow(() -> new BusinessException("Conta de origem não encontrada"));
+        log.info("Iniciando transferência da conta {} para {}", request.sourceAccountUuid(), request.destinationAccountUuid());
 
-        var destination = accountRepository.findByUuid(request.destinationAccountUuid())
-                .orElseThrow(() -> new BusinessException("Conta de destino não encontrada"));
+        // Lock em ambas as contas (ordem consistente evita deadlocks)
+        Account source = accountRepository.findByUuidWithLock(request.sourceAccountUuid())
+                .orElseThrow(() -> new BusinessException("Conta de origem não encontrada."));
 
-        // Validação de saldo: compareTo retorna -1 se for menor
+        Account destination = accountRepository.findByUuidWithLock(request.destinationAccountUuid())
+                .orElseThrow(() -> new BusinessException("Conta de destino não encontrada."));
+
         if (source.getBalance().compareTo(request.amount()) < 0) {
-            throw new BusinessException("Saldo insuficiente para a transferência");
+            log.error("Saldo insuficiente na conta {}. Saldo atual: {}", source.getUuid(), source.getBalance());
+            throw new BusinessException("Saldo insuficiente para a operação.");
         }
-
         source.setBalance(source.getBalance().subtract(request.amount()));
         destination.setBalance(destination.getBalance().add(request.amount()));
 
@@ -70,24 +78,19 @@ public class TransactionService {
                 .description(request.description())
                 .build();
 
-        var savedTransaction = transactionRepository.save(transaction);
-        return toResponse(savedTransaction);
+        return toResponse(transactionRepository.save(transaction));
     }
 
     @Transactional(readOnly = true)
     public Page<TransactionResponse> getStatement(String accountUuid, Pageable pageable) {
+        log.debug("Buscando extrato para a conta: {}", accountUuid);
         if (!accountRepository.existsByUuid(accountUuid)) {
-            throw new BusinessException("Conta não encontrada para gerar extrato");
+            throw new BusinessException("Conta inexistente.");
         }
         return transactionRepository.findStatementByAccountUuid(accountUuid, pageable)
                 .map(this::toResponse);
     }
 
-    /**
-     * Mapeamento unificado.
-     * Se TransactionResponse for um RECORD, use o construtor.
-     * Se for uma CLASSE com @Builder, use TransactionResponse.builder()...
-     */
     private TransactionResponse toResponse(FinancialTransaction tx) {
         return new TransactionResponse(
                 tx.getUuid(),
@@ -99,4 +102,5 @@ public class TransactionService {
                 tx.getDestinationAccount().getUuid()
         );
     }
+
 }
