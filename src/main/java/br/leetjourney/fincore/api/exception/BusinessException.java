@@ -1,7 +1,7 @@
-package br.leetjourney.fincore.api.exception;
+    package br.leetjourney.fincore.api.exception;
 
-public class BusinessException extends RuntimeException {
-    public BusinessException(String message) {
-        super(message);
+    public class BusinessException extends RuntimeException {
+        public BusinessException(String message) {
+            super(message);
+        }
     }
-}
