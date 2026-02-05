@@ -4,6 +4,9 @@ import br.leetjourney.fincore.api.dto.request.DepositRequest;
 import br.leetjourney.fincore.api.dto.response.TransactionResponse;
 import br.leetjourney.fincore.api.dto.request.TransferRequest;
 import br.leetjourney.fincore.core.service.TransactionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +29,12 @@ public class TransactionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(transactionService.deposit(request));
     }
 
+    @Operation(summary = "Realiza uma transferência", description = "Transfere valores entre duas contas com garantia de atomicidade (ACID)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Transferência realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Saldo insuficiente ou dados inválidos"),
+            @ApiResponse(responseCode = "403", description = "Token JWT inválido ou expirado")
+    })
     @PostMapping("/transfer")
     public ResponseEntity<TransactionResponse> transfer(@Valid @RequestBody TransferRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(transactionService.transfer(request));
