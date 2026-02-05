@@ -6,6 +6,8 @@ import br.leetjourney.fincore.core.entity.Account;
 import br.leetjourney.fincore.core.repository.AccountRepository;
 import br.leetjourney.fincore.core.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,10 +41,9 @@ public class AccountService {
     }
 
 
-    public List<AccountResponse> findAll(){
-         return accountRepository.findAll()
-                 .stream().map(this::toResponse)
-                 .toList();
+    public Page<AccountResponse> findAll(Pageable pageable){
+         return accountRepository.findAll(pageable)
+                 .map(this::toResponse);
     }
 
     private String generateUniqueAccountNumber() {

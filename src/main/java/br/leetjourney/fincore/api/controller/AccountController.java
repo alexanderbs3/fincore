@@ -5,6 +5,9 @@ import br.leetjourney.fincore.api.dto.response.AccountResponse;
 import br.leetjourney.fincore.core.service.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +29,10 @@ public class AccountController {
 
 
     @GetMapping
-    public ResponseEntity<List<AccountResponse>>findAll(){
-        var accountResponse = accountService.findAll();
-        return ResponseEntity.ok(accountResponse);
+    public ResponseEntity<Page<AccountResponse>> findAll(
+            @PageableDefault(size = 10, sort = "createdAt") Pageable pageable) {
+
+        var page = accountService.findAll(pageable);
+        return ResponseEntity.ok(page);
     }
 }
