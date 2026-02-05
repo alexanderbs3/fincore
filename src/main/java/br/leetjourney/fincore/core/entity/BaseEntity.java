@@ -24,7 +24,7 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @lombok.Builder.Default // ADICIONE ISSO
+    @lombok.Builder.Default
     @Column(nullable = false, updatable = false, unique = true)
     private String uuid = UUID.randomUUID().toString();
 
