@@ -1,10 +1,7 @@
 package br.leetjourney.fincore.core.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
@@ -12,6 +9,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "accounts")
 @Getter
+@ToString(exclude = "customer")
 @Setter
 @SuperBuilder
 @NoArgsConstructor
@@ -21,7 +19,9 @@ public class Account extends BaseEntity {
     @Column(nullable = false, unique = true, length = 10)
     private String accountNumber;
 
+    @Column(nullable = false, length = 4)
     private String agency;
+
     @Column(nullable = false)
     private BigDecimal balance;
 
