@@ -6,6 +6,10 @@ import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 
-public record DepositRequest(@NotBlank String accountUuid,
-                             @NotNull @Positive BigDecimal amount) {
+public record DepositRequest(@NotBlank(message = "O UUID da conta é obrigatório")
+                             String accountUuid,
+
+                             @NotNull(message = "O valor é obrigatório")
+                             @Positive(message = "O valor do depósito deve ser maior que zero")
+                             BigDecimal amount) {
 }
