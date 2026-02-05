@@ -1,4 +1,4 @@
-package br.leetjourney.fincore.core.security;
+package br.leetjourney.fincore.core.service;
 
 import br.leetjourney.fincore.api.dto.request.AccountRequest;
 import br.leetjourney.fincore.api.dto.response.AccountResponse;
@@ -6,10 +6,11 @@ import br.leetjourney.fincore.core.entity.Account;
 import br.leetjourney.fincore.core.repository.AccountRepository;
 import br.leetjourney.fincore.core.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +18,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final CustomerRepository customerRepository;
 
-
+     @Transactional
     public AccountResponse create(AccountRequest request) {
         var customer = customerRepository.findByUuid(request.customerUuid())
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado para UUID encontrado"));
@@ -35,6 +36,13 @@ public class AccountService {
 
         var savedAccount = accountRepository.save(account);
         return toResponse(savedAccount);
+    }
+
+
+    public List<AccountResponse> findAll(){
+         return accountRepository.findAll()
+                 .stream().map(this::toResponse)
+                 .toList();
     }
 
     private String generateUniqueAccountNumber() {
