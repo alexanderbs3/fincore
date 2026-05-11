@@ -1,0 +1,14 @@
+CREATE TABLE accounts (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    uuid VARCHAR(36) NOT NULL UNIQUE,
+    account_number VARCHAR(10) NOT NULL UNIQUE,
+    agency VARCHAR(4) NOT NULL,
+    balance DECIMAL(19,2) NOT NULL DEFAULT 0.00,
+    type VARCHAR(20) NOT NULL,
+    customer_id BIGINT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_account_customer FOREIGN KEY (customer_id) REFERENCES customer(id),
+    INDEX idx_account_number (account_number)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
